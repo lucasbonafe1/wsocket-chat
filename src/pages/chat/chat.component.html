@@ -1,0 +1,11 @@
+<h2>WSCHAT</h2>
+
+<div id="messages">
+
+</div>
+
+<div id="input-area">
+    <input id="text" type="text" placeholder="Digite sua mensagem..." [(ngModel)]="contentMessage"/>
+    <button (click)="sendMessage('SEND_TO_USER')">Enviar</button>
+    <button (click)="sendMessage('SEND_TO_ALL')">Enviar para todos</button>
+</div>
