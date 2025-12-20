@@ -1,8 +1,8 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageModel } from '../../models/message-model';
-import { map } from 'rxjs';
 import { WebsocketService } from '../../services/websocket-service';
+import { TypeEnum } from '../../models/enums/type-enum';
 
 @Component({
   selector: 'chat-page',
@@ -11,36 +11,30 @@ import { WebsocketService } from '../../services/websocket-service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit, OnDestroy{
-  private url = 'http://localhost:8080/ws';
   protected contentMessage: string = '';
-  protected dataList: any[] = [];
+  protected TypeEnum = TypeEnum;
   
-  constructor(private webSocketService: WebsocketService) {
-  }
+  constructor(
+    private webSocketService: WebsocketService
+  ) {}
 
   ngOnInit(): void {
-    let webSocketConnection$ = this.webSocketService.connectSocket(this.url);
-    webSocketConnection$.subscribe((status: any) =>
-      status ? this.messageListener() : 'erro na conexão'
-    );
+    this.messageListener();
   }
   
-  public sendMessage(type : string): void {
+  public sendMessage(type : TypeEnum): void {
     const model = new MessageModel(type, this.contentMessage);
     this.webSocketService.sendMessage(model);
+
+    this.contentMessage = '';
   }
   
   messageListener() {
     this.webSocketService
-      .receiveMessages()
-      .pipe(map((message: any) => this.setData(message)))
-      .subscribe();
-  }
-
-   setData(data: any) {
-    if (this.dataList.length < 10) this.dataList.push(data);
-    else this.webSocketService.disconnectSocket();
-    console.log(this.dataList);
+      .receiveMessages().subscribe({
+        next: (msg) => console.log('Conectado e recebendo:', msg),
+        error: (err) => console.error('Erro na conexão:', err)
+      });
   }
 
   ngOnDestroy(): void {
