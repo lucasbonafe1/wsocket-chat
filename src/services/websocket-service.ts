@@ -1,8 +1,8 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { MessageModel } from '../models/message-model';
-import { isPlatformBrowser } from '@angular/common';
 import { EMPTY } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { environment } from '../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class WebsocketService {
 
   connect(userId: string) {
     this.socket$ = webSocket({
-      url: `ws://localhost:8080/chat?userId=${userId}`
+      url: `${environment.wsUrl}?userId=${userId}`
     });
   }
 
