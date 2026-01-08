@@ -1,9 +1,12 @@
 export class UserModel {
+    public id?: number;
     public username: string;
-    public userId: string;
+    public normalizedUsername: string;
+    public key: string;
 
-    constructor(username: string, userId: string) {
+    constructor(username: string, normalizedUsername: string, key: string) {
         this.username = username;
-        this.userId = userId;
+        this.normalizedUsername = normalizedUsername;
+        this.key = key;
     }
 }

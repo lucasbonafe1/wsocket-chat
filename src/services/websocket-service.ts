@@ -12,7 +12,16 @@ export class WebsocketService {
 
   connect(userId: string) {
     this.socket$ = webSocket({
-      url: `${environment.wsUrl}?userId=${userId}`
+      url: `${environment.wsUrl}?userId=${userId}`,
+      // evita erro quando o servidor envia texto simples em vez de JSON
+      deserializer: msgEvent => {
+        const data = (msgEvent as MessageEvent).data;
+        try {
+          return JSON.parse(data);
+        } catch {
+          return data;
+        }
+      }
     });
   }
 

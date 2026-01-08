@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageModel } from '../../models/message-model';
 import { WebsocketService } from '../../services/websocket-service';
@@ -11,9 +11,9 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit, OnDestroy{
+export class ChatComponent implements OnInit{
+  @Input() public userIdSelected: string = '';
   protected contentMessage: string = '';
-  protected userId: string = '';
   protected TypeEnum = TypeEnum;
   protected messagesArray: Array<{content: string, timestamp: Date, isSender: boolean}> = [];
 
@@ -23,13 +23,15 @@ export class ChatComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.webSocketService.connect(this.userId);
+      var userIdLogged = localStorage.getItem('userIdLogged') || '';
+      this.webSocketService.connect(userIdLogged);
       this.messageListener();
     }
   }
   
   public sendMessage(type : TypeEnum): void {
-    const model = new MessageModel(type, this.userId, this.contentMessage);
+    console.log('Enviando mensagem para :', this.userIdSelected);
+    const model = new MessageModel(type, this.userIdSelected, this.contentMessage);
     this.webSocketService.sendMessage(model);
 
     this.messagesArray.push({content: this.contentMessage, timestamp: new Date(), isSender: true});
@@ -46,7 +48,7 @@ export class ChatComponent implements OnInit, OnDestroy{
       });
   }
 
-  ngOnDestroy(): void {
-    this.webSocketService.disconnectSocket();
-  }
+  // ngOnDestroy(): void {
+  //   this.webSocketService.disconnectSocket();
+  // }
 }

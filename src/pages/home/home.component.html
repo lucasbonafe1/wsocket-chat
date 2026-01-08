@@ -1,0 +1,10 @@
+<div>
+    <h1>Usuários Registrados</h1>
+    <ul>
+        <li *ngFor="let user of registeredUsers" (click)="selectedUserId = user.key">
+            {{ user.username }}
+        </li>
+    </ul>
+</div>
+
+<chat-page [userIdSelected]="selectedUserId" *ngIf="selectedUserId"></chat-page>
