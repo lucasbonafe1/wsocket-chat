@@ -1,8 +1,10 @@
-<div>
-    <h1>Usuários Registrados</h1>
-    <ul>
+<div class="home-card">
+    <h1>Olá {{ username }}</h1>
+    <h1>Lista de usuários registrados</h1>
+    <ul class="registered-list">
         <li *ngFor="let user of registeredUsers" (click)="selectedUserId = user.key">
-            {{ user.username }}
+            <p class="username">{{ user.username }}</p>
+            <p class="user-key">{{ user.key }}</p>
         </li>
     </ul>
 </div>

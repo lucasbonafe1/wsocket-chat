@@ -29,6 +29,7 @@ export class LoginComponent {
   this.userService.postUsername(name).subscribe({
     next: user => {
       localStorage.setItem('userIdLogged', user.key);
+      localStorage.setItem('usernameLogged', user.username);
       this.router.navigate(['/home']);
     },
     error: err => {
